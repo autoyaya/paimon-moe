@@ -32,11 +32,12 @@ jobs:
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
           
-          # 正確的原神國際服簽到 API 門牌，並帶上你的活動 ID
-          url = 'https://sg-public-api.hoyolab.com/event/sol/sign?act_id=e202102251931481'
+          # 【真正正確】的原神國際服簽到 API 網址，必須包含 /sol/os/sign
+          url = 'https://sg-public-api.hoyolab.com/event/sol/os/sign'
+          data = {'act_id': 'e202102251931481'}
           
           try:
-              res = requests.post(url, headers=headers, json={})
+              res = requests.post(url, headers=headers, json=data)
               try:
                   res_json = res.json()
                   msg = f'【原神自動簽到結果】\n回傳訊息: {res_json.get(\"message\")}\n錯誤代碼: {res_json.get(\"retcode\")}'
