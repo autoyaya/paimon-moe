@@ -24,27 +24,36 @@ jobs:
           cookie = os.environ.get('HOYOLAB_COOKIE')
           webhook = os.environ.get('DISCORD_WEBHOOK')
           
+          # 徹底修正後的驗證 Header，補上了關鍵的 X-Rpc-Client_type
           headers = {
               'Cookie': cookie,
               'Accept': 'application/json, text/plain, */*',
               'Origin': 'https://act.hoyolab.com',
               'Referer': 'https://act.hoyolab.com/',
+              'X-Rpc-Client_type': '5',
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
           
-          # 【這次絕對正確】原神國際服專屬網域 + 拔掉多餘 os 的精準路徑
-          url = 'https://sg-hk4e-api.hoyolab.com/event/sol/sign'
+          # 標準的全球 HoYoLAB 簽到 API 入口
+          url = 'https://sg-public-api.hoyolab.com/event/sol/sign'
           data = {'act_id': 'e202102251931481'}
           
           try:
               res = requests.post(url, headers=headers, json=data)
-              try:
-                  res_json = res.json()
-                  msg = f'【原神自動簽到結果】\n回傳訊息: {res_json.get(\"message\")}\n錯誤代碼: {res_json.get(\"retcode\")}'
-              except Exception:
-                  msg = f'【原神自動簽到結果】\n解析失敗，伺服器回傳內容:\n{res.text[:200]}'
+              res_json = res.json()
+              
+              retcode = res_json.get('retcode')
+              message = res_json.get('message')
+              
+              if retcode == 0:
+                  msg = '【原神自動簽到成功】\n🎉 順利蓋章！獎勵已發送到你的遊戲內信箱。'
+              elif retcode == -5003:
+                  msg = '【原神自動簽到結果】\n🌟 提示：旅行者，你今天已經手動簽到過囉！'
+              else:
+                  msg = f'【原神自動簽到失敗】\n回傳訊息: {message}\n錯誤代碼: {retcode}\n💡 備註：若仍顯示 -100，請參考下方防呆說明重新複製 Cookie。'
+                      
           except Exception as e:
-              msg = f'【原神自動簽到結果】\n網路請求失敗: {str(e)}'
+              msg = f'【原神自動簽到結果】\n系統執行出錯: {str(e)}'
           
           print(msg)
           if webhook:
