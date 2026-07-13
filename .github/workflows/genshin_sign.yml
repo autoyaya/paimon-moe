@@ -1,0 +1,43 @@
+name: Genshin Auto Sign
+
+on:
+  schedule:
+    - cron: '0 18 * * *' # 每天台灣時間凌晨 02:00 自動執行
+  workflow_dispatch: # 允許手動點擊執行
+
+jobs:
+  hoyolab_sign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Execute Sign-in
+        env:
+          HOYOLAB_COOKIE: ${{ secrets.HOYOLAB_COOKIE }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          python -c "
+          import os
+          import requests
+          
+          cookie = os.environ.get('HOYOLAB_COOKIE')
+          webhook = os.environ.get('DISCORD_WEBHOOK')
+          
+          headers = {
+              'Cookie': cookie,
+              'Accept': 'application/json, text/plain, */*',
+              'Origin': 'https://act.hoyolab.com',
+              'Referer': 'https://act.hoyolab.com/',
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+          }
+          data = {'act_id': 'e202303301540311'}
+          
+          res = requests.post('https://sg-public-api.hoyolab.com/event/luna/os/sign', headers=headers, json=data).json()
+          
+          msg = f'【原神自動簽到結果】\n回傳訊息: {res.get(\"message\")}\n錯誤代碼: {res.get(\"retcode\")}'
+          
+          if webhook:
+              requests.post(webhook, json={'content': msg})
+          print(msg)
+          "
