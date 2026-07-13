@@ -32,8 +32,8 @@ jobs:
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
           
-          # 【真正正確】的原神國際服簽到 API 網址，必須包含 /sol/os/sign
-          url = 'https://sg-public-api.hoyolab.com/event/sol/os/sign'
+          # 【真正最新】的 HoYoLAB 國際服統一簽到 API 網址
+          url = 'https://sg-public-api.hoyolab.com/event/luna/os/sign'
           data = {'act_id': 'e202102251931481'}
           
           try:
