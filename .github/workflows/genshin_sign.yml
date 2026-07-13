@@ -31,13 +31,21 @@ jobs:
               'Referer': 'https://act.hoyolab.com/',
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
-          data = {'act_id': 'e202102251931481'}
           
-          res = requests.post('https://sg-public-api.hoyolab.com/event/sol/sign', headers=headers, json=data).json()
+          # 正確的原神國際服簽到 API 門牌，並帶上你的活動 ID
+          url = 'https://sg-public-api.hoyolab.com/event/sol/sign?act_id=e202102251931481'
           
-          msg = f'【原神自動簽到結果】\n回傳訊息: {res.get(\"message\")}\n錯誤代碼: {res.get(\"retcode\")}'
+          try:
+              res = requests.post(url, headers=headers, json={})
+              try:
+                  res_json = res.json()
+                  msg = f'【原神自動簽到結果】\n回傳訊息: {res_json.get(\"message\")}\n錯誤代碼: {res_json.get(\"retcode\")}'
+              except Exception:
+                  msg = f'【原神自動簽到結果】\n解析失敗，伺服器回傳內容:\n{res.text[:200]}'
+          except Exception as e:
+              msg = f'【原神自動簽到結果】\n網路請求失敗: {str(e)}'
           
+          print(msg)
           if webhook:
               requests.post(webhook, json={'content': msg})
-          print(msg)
           "
