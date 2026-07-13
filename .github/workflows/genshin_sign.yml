@@ -31,7 +31,7 @@ jobs:
               'Referer': 'https://act.hoyolab.com/',
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
-          data = {'act_id': 'e202303301540311'}
+          data = {'act_id': 'e202102251931481'}
           
           res = requests.post('https://sg-public-api.hoyolab.com/event/luna/os/sign', headers=headers, json=data).json()
           
