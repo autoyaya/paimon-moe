@@ -32,8 +32,8 @@ jobs:
               'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
           }
           
-          # 【真正原神國際服專屬】伺服器網域與正確路域
-          url = 'https://sg-hk4e-api.hoyolab.com/event/sol/os/sign'
+          # 【這次絕對正確】原神國際服專屬網域 + 拔掉多餘 os 的精準路徑
+          url = 'https://sg-hk4e-api.hoyolab.com/event/sol/sign'
           data = {'act_id': 'e202102251931481'}
           
           try:
